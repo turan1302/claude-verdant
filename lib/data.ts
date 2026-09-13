@@ -16,8 +16,8 @@ export type Testimonial = {
   rating: number;
 };
 
-const unsplash = (id: string, width = 1200) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${width}&q=80`;
+// Base URL only: lib/unsplash-loader.ts adds the width and quality per srcset entry.
+const unsplash = (id: string) => `https://images.unsplash.com/photo-${id}`;
 
 export const brand = {
   name: "VERDANT",
@@ -37,14 +37,15 @@ export const navLinks = [
 ];
 
 export const heroImages = [
-  unsplash("1587836374828-4dbafa94cf0e", 2400),
-  unsplash("1612817159949-195b6eb9e31a", 2400),
-  unsplash("1548171915-e79a380a2a4b", 2400),
+  unsplash("1587836374828-4dbafa94cf0e"),
+  unsplash("1612817159949-195b6eb9e31a"),
+  unsplash("1548171915-e79a380a2a4b"),
 ];
 
 export const aboutVideo = {
   src: "https://videos.pexels.com/video-files/11965317/11965317-hd_1280_720_24fps.mp4",
-  poster: unsplash("1622434641406-a158123450f9", 1200),
+  // Not rendered through next/image, so it carries its own size.
+  poster: `${unsplash("1622434641406-a158123450f9")}?auto=format&fit=crop&w=900&q=60`,
 };
 
 export const featuredProducts: Product[] = [

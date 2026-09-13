@@ -10,9 +10,10 @@ export default function FeaturedProducts() {
     <section id="koleksiyon" className="relative overflow-hidden bg-onyx-900 py-24 md:py-32">
       {/* Emerald light behind the glass so the refraction has something to bend */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="animate-drift absolute -left-24 top-32 size-[28rem] rounded-full bg-verdant-600/40 blur-[110px]" />
-        <div className="animate-drift absolute -right-24 top-1/2 size-[32rem] rounded-full bg-verdant-500/25 blur-[120px] [animation-delay:-6s]" />
-        <div className="animate-drift absolute bottom-0 left-1/3 size-[26rem] rounded-full bg-verdant-800/70 blur-[100px] [animation-delay:-12s]" />
+        {/* Drift only from md up: on phones the moving blur costs more than it adds. */}
+        <div className="absolute -left-24 top-32 size-[28rem] rounded-full bg-verdant-600/40 blur-[110px] md:animate-drift" />
+        <div className="absolute -right-24 top-1/2 size-[32rem] rounded-full bg-verdant-500/25 blur-[120px] [animation-delay:-6s] md:animate-drift" />
+        <div className="absolute bottom-0 left-1/3 size-[26rem] rounded-full bg-verdant-800/70 blur-[100px] [animation-delay:-12s] md:animate-drift" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_center,black_25%,transparent_75%)]" />
       </div>
 

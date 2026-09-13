@@ -42,7 +42,7 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/5 bg-onyx-950/80 py-2 backdrop-blur-xl"
+            ? "border-b border-white/5 bg-onyx-950/90 py-2 md:bg-onyx-950/80 md:backdrop-blur-xl"
             : "border-b border-transparent py-3 md:py-5"
         }`}
       >
@@ -129,7 +129,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-onyx-950/95 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-onyx-950/[0.98] lg:hidden"
           >
             <div
               aria-hidden

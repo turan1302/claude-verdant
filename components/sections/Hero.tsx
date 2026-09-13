@@ -15,10 +15,21 @@ import { brand, heroImages } from "@/lib/data";
 const SLIDE_DURATION = 7000;
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const withNext = (loaded: ReadonlySet<number>, i: number) =>
+  new Set(loaded).add(i).add((i + 1) % heroImages.length);
+
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
+  // Slides mount once they're current or next up, so the first paint downloads
+  // two images instead of all of them and each is ready before it fades in.
+  const [loaded, setLoaded] = useState<ReadonlySet<number>>(() => withNext(new Set(), 0));
+
+  const show = (i: number) => {
+    setActive(i);
+    setLoaded((prev) => withNext(prev, i));
+  };
 
   // Scroll parallax: background drifts slower than the page, content fades out.
   const { scrollYProgress } = useScroll({
@@ -40,10 +51,11 @@ export default function Hero() {
   // Crossfade to the next image; restarts whenever a slide is picked manually.
   useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setTimeout(
-      () => setActive((i) => (i + 1) % heroImages.length),
-      SLIDE_DURATION,
-    );
+    const timer = window.setTimeout(() => {
+      const next = (active + 1) % heroImages.length;
+      setActive(next);
+      setLoaded((prev) => withNext(prev, next));
+    }, SLIDE_DURATION);
     return () => window.clearTimeout(timer);
   }, [active, reduceMotion]);
 
@@ -64,27 +76,28 @@ export default function Hero() {
       {/* Moving watch imagery */}
       <motion.div aria-hidden className="absolute inset-0" style={{ y: backgroundY }}>
         <motion.div className="absolute -inset-10" style={{ x: parallaxX, y: parallaxY }}>
-          {heroImages.map((src, i) => (
-            <motion.div
-              key={src}
-              className="absolute inset-0"
-              initial={false}
-              animate={{ opacity: i === active ? 1 : 0 }}
-              transition={{ duration: 2.2, ease: "easeInOut" }}
-            >
-              <motion.div
-                className="absolute inset-0"
-                animate={{
-                  scale: [1.05, 1.2],
-                  x: i % 2 === 0 ? ["0%", "-3%"] : ["0%", "3%"],
-                  y: ["0%", "-2%"],
-                }}
-                transition={{ duration: 22, ease: "linear", repeat: Infinity, repeatType: "mirror" }}
-              >
-                <Image src={src} alt="" fill priority={i === 0} sizes="100vw" className="object-cover" />
-              </motion.div>
-            </motion.div>
-          ))}
+          {heroImages.map(
+            (src, i) =>
+              loaded.has(i) && (
+                <motion.div
+                  key={src}
+                  className="absolute inset-0"
+                  initial={false}
+                  animate={{ opacity: i === active ? 1 : 0 }}
+                  transition={{ duration: 2.2, ease: "easeInOut" }}
+                >
+                  {/* CSS zoom runs on the compositor; hidden slides pause in place
+                      so the outgoing one doesn't jump while it fades out. */}
+                  <div
+                    className={`animate-ken-burns absolute inset-0 ${
+                      i % 2 === 0 ? "[--kb-x:-3%]" : "[--kb-x:3%]"
+                    } ${i === active ? "" : "[animation-play-state:paused]"}`}
+                  >
+                    <Image src={src} alt="" fill preload={i === 0} sizes="100vw" className="object-cover" />
+                  </div>
+                </motion.div>
+              ),
+          )}
         </motion.div>
       </motion.div>
 
@@ -99,7 +112,10 @@ export default function Hero() {
         aria-hidden
         className="absolute left-1/2 top-1/2 h-[40rem] w-[60rem] max-w-[140vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-verdant-600/20 blur-[120px]"
       />
-      <div aria-hidden className="grain pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay" />
+      <div
+        aria-hidden
+        className="grain pointer-events-none absolute inset-0 hidden opacity-[0.08] mix-blend-overlay md:block"
+      />
 
       {/* Vertical side label */}
       <p
@@ -206,7 +222,7 @@ export default function Hero() {
           <button
             key={src}
             type="button"
-            onClick={() => setActive(i)}
+            onClick={() => show(i)}
             aria-label={`${i + 1}. görsele geç`}
             aria-current={i === active}
             className="group flex min-h-11 items-center gap-2.5 text-[0.65rem] tracking-[0.2em]"

@@ -21,6 +21,7 @@
   --animate-shimmer: shimmer 7s linear infinite;
   --animate-scroll-cue: scroll-cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
   --animate-drift: drift 18s ease-in-out infinite;
+  --animate-ken-burns: ken-burns 22s linear infinite alternate;
 
   @keyframes shimmer {
     from {
@@ -52,6 +53,16 @@
     }
     50% {
       transform: translate3d(6%, -8%, 0) scale(1.12);
+    }
+  }
+
+  /* Slow hero zoom; --kb-x sets the pan direction per slide. */
+  @keyframes ken-burns {
+    from {
+      transform: translate3d(0, 0, 0) scale(1.05);
+    }
+    to {
+      transform: translate3d(var(--kb-x, -3%), -2%, 0) scale(1.2);
     }
   }
 }
