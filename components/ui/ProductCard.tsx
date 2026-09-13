@@ -34,7 +34,7 @@ export default function ProductCard({
         <div className="absolute inset-0 bg-linear-to-t from-onyx-950/70 via-transparent to-transparent" />
 
         {badge && (
-          <span className="absolute left-3 top-3 rounded-full bg-verdant-600/90 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-ivory backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-full bg-verdant-600/90 px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-ivory desktop:backdrop-blur">
             {badge}
           </span>
         )}
@@ -44,7 +44,7 @@ export default function ProductCard({
           onClick={() => setLiked((v) => !v)}
           aria-pressed={liked}
           aria-label={liked ? `${product.name} favorilerden çıkar` : `${product.name} favorilere ekle`}
-          className="absolute right-3 top-3 grid size-11 place-items-center rounded-full bg-onyx-950/50 text-ivory backdrop-blur-md transition hover:bg-onyx-950/80"
+          className="absolute right-3 top-3 grid size-11 place-items-center rounded-full bg-onyx-950/60 text-ivory transition hover:bg-onyx-950/80 desktop:backdrop-blur-md"
         >
           <Heart
             className={`size-4 transition ${liked ? "fill-verdant-400 text-verdant-400" : ""}`}

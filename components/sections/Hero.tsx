@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
+  useInView,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -11,6 +12,7 @@ import {
   useTransform,
 } from "motion/react";
 import { brand, heroImages } from "@/lib/data";
+import { DESKTOP_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 
 const SLIDE_DURATION = 7000;
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -22,6 +24,10 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
+  // Scroll parallax (inline styles every frame) and the text shimmer (a repaint
+  // every frame) are desktop-only; the CSS loops pause once the hero is off screen.
+  const desktop = useMediaQuery(DESKTOP_QUERY);
+  const inView = useInView(sectionRef);
   // Slides mount once they're current or next up, so the first paint downloads
   // two images instead of all of them and each is ready before it fades in.
   const [loaded, setLoaded] = useState<ReadonlySet<number>>(() => withNext(new Set(), 0));
@@ -74,7 +80,11 @@ export default function Hero() {
       className="relative flex min-h-svh items-center justify-center overflow-hidden bg-onyx-950 pb-32 pt-28"
     >
       {/* Moving watch imagery */}
-      <motion.div aria-hidden className="absolute inset-0" style={{ y: backgroundY }}>
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        style={desktop ? { y: backgroundY } : undefined}
+      >
         <motion.div className="absolute -inset-10" style={{ x: parallaxX, y: parallaxY }}>
           {heroImages.map(
             (src, i) =>
@@ -91,7 +101,7 @@ export default function Hero() {
                   <div
                     className={`animate-ken-burns absolute inset-0 ${
                       i % 2 === 0 ? "[--kb-x:-3%]" : "[--kb-x:3%]"
-                    } ${i === active ? "" : "[animation-play-state:paused]"}`}
+                    } ${i === active && inView ? "" : "[animation-play-state:paused]"}`}
                   >
                     <Image src={src} alt="" fill preload={i === 0} sizes="100vw" className="object-cover" />
                   </div>
@@ -128,7 +138,7 @@ export default function Hero() {
       {/* Center content */}
       <motion.div
         className="container-lux relative z-10 flex flex-col items-center text-center"
-        style={{ y: contentY, opacity: contentOpacity }}
+        style={desktop ? { y: contentY, opacity: contentOpacity } : undefined}
       >
         <motion.div
           className="flex items-center gap-3 sm:gap-5"
@@ -160,7 +170,9 @@ export default function Hero() {
               ))}
             </span>
             <motion.span
-              className="text-sweep animate-shimmer pointer-events-none absolute inset-0"
+              className={`text-sweep animate-shimmer pointer-events-none absolute inset-0 hidden desktop:block ${
+                inView ? "" : "[animation-play-state:paused]"
+              }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.9 }}
@@ -209,7 +221,7 @@ export default function Hero() {
           </a>
           <a
             href="#hikaye"
-            className="inline-flex min-h-12 items-center justify-center border border-ivory/25 bg-white/5 px-8 text-[0.68rem] font-medium uppercase tracking-[0.3em] text-ivory backdrop-blur-md transition hover:border-verdant-400 hover:text-verdant-300"
+            className="inline-flex min-h-12 items-center justify-center border border-ivory/25 bg-white/10 px-8 text-[0.68rem] font-medium uppercase tracking-[0.3em] text-ivory transition desktop:bg-white/5 desktop:backdrop-blur-md hover:border-verdant-400 hover:text-verdant-300"
           >
             Hikayemiz
           </a>
@@ -250,7 +262,11 @@ export default function Hero() {
       >
         <span className="pl-[0.4em]">Kaydır</span>
         <span className="relative h-12 w-px overflow-hidden bg-white/15">
-          <span className="animate-scroll-cue absolute inset-x-0 top-0 h-1/2 bg-verdant-400" />
+          <span
+            className={`animate-scroll-cue absolute inset-x-0 top-0 h-1/2 bg-verdant-400 ${
+              inView ? "" : "[animation-play-state:paused]"
+            }`}
+          />
         </span>
       </motion.a>
     </section>

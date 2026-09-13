@@ -1,7 +1,7 @@
 "use client";
 
 import { GlassCard as LiquidGlassCard } from "@developer-hub/liquid-glass";
-import { useMediaQuery } from "@/lib/useMediaQuery";
+import { DESKTOP_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 
 type GlassCardProps = {
   children: React.ReactNode;
@@ -12,8 +12,7 @@ type GlassCardProps = {
 // The liquid effect is an SVG displacement filter plus a backdrop blur that is
 // repainted on the CPU whenever anything behind it moves. Phones and tablets
 // can't keep up, so they get the same tinted surface without the refraction.
-const LIQUID_QUERY =
-  "(hover: hover) and (pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference)";
+const LIQUID_QUERY = `${DESKTOP_QUERY} and (prefers-reduced-motion: no-preference)`;
 
 // Thin wrapper around @developer-hub/liquid-glass with VERDANT defaults.
 // The `.verdant-glass` rules in globals.css stretch the card and add the tint.

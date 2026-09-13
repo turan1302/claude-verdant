@@ -8,12 +8,14 @@ type RevealProps = {
   className?: string;
 };
 
+// A full `transform` string (unlike `y`) lets Motion hand the animation to the
+// compositor instead of writing inline styles on every frame while scrolling.
 export default function Reveal({ children, delay = 0, className }: RevealProps) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, transform: "translateY(32px)" }}
+      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
     >

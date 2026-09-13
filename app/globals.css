@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Mouse + wide screen (same as DESKTOP_QUERY in lib/useMediaQuery.ts). Effects
+   that repaint every frame are scoped to it; phones and tablets can't keep up. */
+@custom-variant desktop (@media (hover: hover) and (pointer: fine) and (width >= 64rem));
+
 @theme {
   --color-onyx-950: #050505;
   --color-onyx-900: #0b0b0b;

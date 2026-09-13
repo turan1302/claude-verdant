@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "motion/react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -27,8 +28,18 @@ export default function NewArrivals() {
     };
   }, [emblaApi]);
 
+  // Autoplay would keep sliding (and repainting) off screen; run it only while visible.
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef);
+  useEffect(() => {
+    const autoplay = emblaApi?.plugins().autoplay;
+    if (!autoplay) return;
+    if (inView) autoplay.play();
+    else autoplay.stop();
+  }, [emblaApi, inView]);
+
   return (
-    <section id="yeni" className="relative overflow-hidden bg-onyx-950 py-24 md:py-32">
+    <section id="yeni" ref={sectionRef} className="relative overflow-hidden bg-onyx-950 py-24 md:py-32">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-40 top-10 size-[30rem] rounded-full bg-verdant-800/30 blur-[140px]"
