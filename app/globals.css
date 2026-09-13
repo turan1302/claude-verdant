@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+@theme {
+  --color-onyx-950: #050505;
+  --color-onyx-900: #0b0b0b;
+  --color-onyx-800: #121212;
+  --color-onyx-700: #1c1c1c;
+
+  --color-verdant-200: #a8e6bf;
+  --color-verdant-300: #7fdca0;
+  --color-verdant-400: #50c878;
+  --color-verdant-500: #2e9e5b;
+  --color-verdant-600: #046a38;
+  --color-verdant-700: #0a5234;
+  --color-verdant-800: #0b3d2e;
+  --color-verdant-900: #062a1f;
+
+  --color-ivory: #f2efe8;
+  --color-mist: #a8a8a0;
+
+  --animate-shimmer: shimmer 7s linear infinite;
+  --animate-scroll-cue: scroll-cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-drift: drift 18s ease-in-out infinite;
+
+  @keyframes shimmer {
+    from {
+      background-position: 150% center;
+    }
+    to {
+      background-position: -50% center;
+    }
+  }
+
+  @keyframes scroll-cue {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(250%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(6%, -8%, 0) scale(1.12);
+    }
+  }
+}
+
+@theme inline {
+  --font-serif: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  color-scheme: dark;
+  background: var(--color-onyx-950);
+}
+
+body {
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-verdant-600);
+  color: var(--color-ivory);
+}
+
+@utility container-lux {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-verdant-400);
+}
+
+/* Highlight band that sweeps across the brand name */
+@utility text-sweep {
+  background-image: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(127, 220, 160, 0.85) 47%,
+    #ffffff 50%,
+    rgba(80, 200, 120, 0.85) 53%,
+    transparent 58%
+  );
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-emerald-gradient {
+  background-image: linear-gradient(120deg, #a8e6bf 0%, #50c878 45%, #046a38 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Brand name in the hero. Kerning is disabled so the per-letter spans and the
+   shimmer overlay (continuous text) lay out identically. */
+.brand-wordmark {
+  --tracking: 0.12em;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(2.75rem, 14vw, 11.5rem);
+  line-height: 1;
+  letter-spacing: var(--tracking);
+  margin-right: calc(var(--tracking) * -1);
+  font-kerning: none;
+  white-space: nowrap;
+}
+
+@media (width >= 48rem) {
+  .brand-wordmark {
+    --tracking: 0.2em;
+  }
+}
+
+/* @developer-hub/liquid-glass renders `.glass` as inline-flex with no tint;
+   stretch it to the card and give it an emerald-tinted glass surface. */
+.verdant-glass {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(80, 200, 120, 0.025) 60%, rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+.verdant-glass > .glass {
+  display: flex !important;
+  width: 100%;
+  height: 100%;
+}
+
+.verdant-glass > .glass > div:last-child {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
